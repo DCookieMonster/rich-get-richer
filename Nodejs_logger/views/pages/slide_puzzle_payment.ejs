@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <% include ../partials/header.ejs %>
+    <script src="/bower_components/Chart.js/dist/Chart.js"></script>
+    <script src="/bower_components/d3/d3.min.js"></script>
+    <script src="/bower_components/mathjs/dist/math.min.js"></script>
+    <style>
+        section {
+            padding: 100px 0;
+            text-align: center;
+        }
+
+        select.frecuency {
+            border: none;
+            font-style: italic;
+            background-color: transparent;
+            cursor: pointer;
+            -webkit-transform: translateY(0);
+            transform: translateY(0);
+            -webkit-transition: -webkit-transform .35s ease-in;
+            transition: -webkit-transform .35s ease-in;
+            border-bottom: none;
+        }
+
+        select.frecuency:focus {
+            outline: none;
+            border-bottom: 5px solid #39b3d7;
+            -webkit-transform: translateY(-5px);
+            transform: translateY(-5px);
+            -webkit-transition: -webkit-transform .35s ease-in;
+            transition: -webkit-transform .35s ease-in;
+        }
+
+        .free {
+            text-transform: uppercase;
+        }
+
+        .input-group {
+            margin: 20px auto;
+            width: 100%;
+        }
+
+        input.btn.btn-lg,
+        input.btn.btn-lg:focus {
+            outline: none;
+            width: 60%;
+            height: 60px;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+
+        button.btn {
+            width: 40%;
+            height: 60px;
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+
+        .promise {
+            color: #999;
+        }
+
+    </style>
+    <script>
+
+
+        var app = angular.module("myApp", ["ngTable"]);
+        var result =  <%- JSON.stringify(results) %>;
+
+        app.controller("payCtrl", ["$scope", "$rootScope",
+            function ($scope, $rootScope) {
+                $scope.cost = 0;
+                $scope.result = result;
+                $scope.pay = function () {
+                    $scope.cost = 0;
+                    angular.forEach($scope.result, function (value, key) {
+                        console.log(key + ': ' + value);
+                        if (value.userId == $scope.userId) {
+                            var start = Math.abs(19 - value.startCost)
+                            var middle = Math.abs(11 - value.middleCost)
+                            var end = Math.abs(6 - value.endCost)
+                            var payment = 0
+                            if (start == 0) {
+                                payment += 0.2
+                            }
+                            if (start == 1) {
+                                payment += 0.15
+                            }
+                            if (start == 2) {
+                                payment += 0.1
+                            }
+                            if (middle == 0) {
+                                payment += 0.2
+                            }
+                            if (middle == 1) {
+                                payment += 0.15
+                            }
+                            if (middle == 2) {
+                                payment += 0.1
+                            }
+                            if (end == 0) {
+                                payment += 0.2
+                            }
+                            if (end == 1) {
+                                payment += 0.15
+                            }
+                            if (end == 2) {
+                                payment += 0.1
+                            }
+                            $scope.cost = payment;
+
+                        }
+                    });
+                }
+            }
+        ]);
+    </script>
+
+</head>
+
+<body ng-app="myApp" ng-controller="payCtrl">
+
+<!--<% include ../partials/nav.ejs %>-->
+
+<div class="container">
+    <div style="margin-top: 20px;"></div>
+    <!--<div class="row">-->
+    <!--<div class="col-lg-2 text-center">-->
+    <!--<h2>User ID:</h2>-->
+    <!--</div>-->
+    <!--<div class="col-lg-6">-->
+    <!--<input ng-model="userId" class="input-lg" type="text">-->
+    <!--</div>-->
+    <!--<div class="col-lg-4 text-center">-->
+    <!--<button ng-click="pay()" class="btn btn-success">What To Pay?</button>-->
+    <!--</div>-->
+    <!--</div>-->
+    <div class="row">
+        <section>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6 col-md-offset-3">
+
+                        <div class="well">
+                            <form action="#">
+                                <div class="input-group">
+                                    <input ng-model="userId" class="btn btn-lg" type="text" placeholder="User ID"
+                                           required>
+                                    <button ng-click="pay()" class="btn btn-info btn-lg" type="submit">How Much To
+                                        Pay?
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        <small class="promise"><em><h1>{{cost}}</h1></em></small>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <div class="row">
+        <div class="col-lg-4">
+
+        </div>
+        <div class="col-lg-4">
+
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

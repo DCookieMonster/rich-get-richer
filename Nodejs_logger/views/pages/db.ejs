@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <% include ../partials/header.ejs %>
+
+    <script>
+        "use strict";
+        var myApp = angular.module("plannerRes", ["ngTable"]);
+
+
+
+        myApp.controller("resCtrl", ["$scope", "$rootScope", 'ngTableParams',
+            function ($scope, $rootScope,ngTableParams) {
+                var self = this;
+                var data = [{name: "Moroni", age: 50} /*,*/];
+                self.tableParams = new NgTableParams({}, { dataset: data});
+
+            }]);
+
+    </script>
+</head>
+
+<body ng-app="plannerRes" ng-controller="resCtrl">
+
+<% include ../partials/nav.ejs %>
+
+<div class="container">
+<h2>Database Results</h2>
+
+
+    <table ng-table="vm.tableParams" class="table" show-filter="true">
+        <% results.forEach(function(r) { %>
+        <tr>
+
+            <td title="'Name'" filter="{ name: 'text'}" sortable="'name'"> <%= r.userId %> </td>
+            <td title="'Age'" filter="{ age: 'number'}" sortable="'age'">
+                <%= r.age %></td>
+
+            <td title="'Age'" filter="{ age: 'number'}" sortable="'age'">
+                <%= r.gender %></td>
+
+            <td title="'Age'" filter="{ age: 'number'}" sortable="'age'">
+                <%= r.education %></td>
+
+            <td title="'Age'" filter="{ age: 'number'}" sortable="'age'">
+                <%= r.DurationInstruction %></td>
+            <td title="'Age'" filter="{ age: 'number'}" sortable="'age'">
+                <%= r.NumberOfTimeInQuiz %></td>
+            <td title="'Age'" filter="{ age: 'number'}" sortable="'age'">
+                <%= r.DurationQuiz %></td>
+
+            <td title="'Age'" filter="{ age: 'number'}" sortable="'age'">
+                <%= r.DurationTraining %></td>
+
+            <td title="'Age'" filter="{ age: 'number'}" sortable="'age'">
+                <%= r.Score %></td>
+
+            <td title="'Age'" filter="{ age: 'number'}" sortable="'age'">
+                <%= r.Win %></td>
+
+            <td title="'Age'" filter="{ age: 'number'}" sortable="'age'">
+                <%= r.GridSize %></td>
+
+
+        </tr>
+        <% }); %>
+        <!--<tr ng-repeat="user in $data">-->
+            <!--<td title="'Name'" filter="{ name: 'text'}" sortable="'name'">-->
+                <!--{{user.name}}</td>-->
+            <!--<td title="'Age'" filter="{ age: 'number'}" sortable="'age'">-->
+                <!--{{user.age}}</td>-->
+        <!--</tr>-->
+    </table>
+
+    <ul>
+
+</ul>
+
+</div>
+
+</body>
+</html>

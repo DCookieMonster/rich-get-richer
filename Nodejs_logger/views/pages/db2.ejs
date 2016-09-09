@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <% include ../partials/header.ejs %>
+    <script src="/bower_components/Chart.js/dist/Chart.js"></script>
+    <script src="/bower_components/d3/d3.min.js"></script>
+    <script src="/bower_components/mathjs/dist/math.min.js"></script>
+
+    <script>
+    (function() {
+        "use strict";
+
+        var app = angular.module("myApp", ["ngTable"]);
+        var result=  <%-JSON.stringify(results)%>;
+
+        app.controller("demoController", demoController);
+        app.filter('num', function() {
+            return function(input) {
+                return parseInt(input, 10);
+            };
+        });
+
+        function demoController(NgTableParams) {
+            var self = this;
+
+            self.tableParams = new NgTableParams({}, {
+                dataset:result
+            });
+        }
+    })();
+</script>
+
+</head>
+
+<body>
+
+<!--<% include ../partials/nav.ejs %>-->
+
+<div class="container" >
+    <div class="row">
+        <div class="col-lg-12">
+            <h2>Database Results</h2>
+
+        </div>
+
+    </div>
+
+    <div ng-app="myApp">
+        <div ng-controller="demoController as demo">
+
+            <div class="row">
+                <div class="col-lg-10"></div>
+                <div class="col-lg-2">
+                    <button onclick="download()" class="btn btn-primary">
+                        Download as CSV
+                    </button>
+                </div>
+            </div>
+            <br>
+
+            <table ng-table="demo.tableParams" class="table table-condensed table-bordered table-striped">
+                <tr ng-repeat="row in $data">
+                    <td data-title="'userId'" filter="{userId: 'text'}" sortable="'userId'">{{row.userId}}</td>
+                    <td data-title="'Age'" filter="{age: 'number'}" sortable="'age'">{{row.age}}</td>
+                    <td data-title="'Gender'" filter="{gender: 'text'}" sortable="'gender'">{{row.gender}}</td>
+                    <td data-title="'Duration Instruction'" filter="{DurationInstruction: 'number'}" sortable="'DurationInstruction'">{{row.DurationInstruction  }}</td>
+                    <!--<td data-title="'Number Of Quizs'" filter="{NumberOfTimeInQuiz: 'number'}" sortable="'NumberOfTimeInQuiz'">{{row.NumberOfTimeInQuiz}}</td>-->
+                    <!--<td data-title="'Duration Quiz'" filter="{DurationQuiz: 'number'}" sortable="'DurationQuiz'">{{row.DurationQuiz}}</td>-->
+                    <!--<td data-title="'Duration Training'" filter="{DurationTraining: 'number'}" sortable="'DurationTraining'">{{row.DurationTraining}}</td>-->
+                    <!--<td data-title="'Score'" filter="{Score: 'number'}" sortable="'Score'">{{row.Score}}</td>-->
+                    <!--<td data-title="'Win'" filter="{Win: 'text'}" sortable="'Win'">{{row.Win}}</td>-->
+                    <!--<td data-title="'Grid Size'" filter="{GridSize: 'text'}" sortable="'GridSize'">{{row.GridSize}}</td>-->
+                    <td data-title="'Calibration Cost'" filter="{calibrationScore: 'number'}" sortable="'calibrationScore'"> {{row.calibrationCost | num}}</td>
+                    <td data-title="'Calibration Duration'" filter="{calibrationDuration: 'number'}" sortable="'calibrationDuration'">{{row.calibrationDuration }}</td>
+                    <td data-title="'Calibration2 Cost'" filter="{calibration2Score: 'number'}" sortable="'calibration2Score'"> {{row.calibration2Cost | num}}</td>
+                    <td data-title="'Calibration2 Duration'" filter="{calibration2Duration: 'number'}" sortable="'calibration2Duration'">{{row.calibration2Duration }}</td>
+                    <td data-title="'Start Cost'" filter="{startScore: 'number'}" sortable="'startScore'"> {{row.startCost | num}}</td>
+                    <td data-title="'Start Duration'" filter="{startDuration: 'number'}" sortable="'startDuration'">{{row.startDuration }}</td>
+                    <td data-title="'Middle Cost'" filter="{middleScore: 'number'}" sortable="'middleScore'">{{row.middleCost | num}}</td>
+                    <td data-title="'Middle Duration'" filter="{middleDuration: 'number'}" sortable="'middleDuration'">{{row.middleDuration  }}</td>
+
+                    <td data-title="'End Cost'" filter="{endScore: 'number'}" sortable="'endScore'">{{row.endCost | num }}</td>
+                    <td data-title="'End Duration'" filter="{endDuration: 'number'}" sortable="'endDuration'">{{row.endDuration }}</td>
+
+                </tr>
+            </table>
+        </div>
+    </div>
+    <br><br>
+    <h3>Filter:</h3>
+    <div class="row">
+        <div class="col-lg-10">
+            <div class="row">
+                <div class="col-lg-2">
+                    <p>Minimal Cost:</p>
+                </div>
+                <div class="col-xs-4">
+                    <div class="range">
+                        <input type="range" name="range" min="0"  value="0" onchange="filterCost(value)">
+                        <output id="range">0</output>
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <p>Minimal Duration Cost (sec):</p>
+                </div>
+                <div class="col-xs-4">
+                    <div class="range range-primary">
+                        <input type="range" name="range" min="1" max="300" value="1" onchange="filterDuration(value)">
+                        <output id="rangePrimary">1</output>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!--<div class="col-lg-2">-->
+        <!--<button onclick="filter()" class="btn btn-danger">-->
+        <!--Filter-->
+        <!--</button>-->
+        <!--</div>-->
+    </div>
+<h3>Charts:</h3>
+    <div class="row">
+        <div class="col-lg-3">
+            <h5 class="text-center">Gender Pie</h5>
+            <canvas id="myChart" width="200" height="200"></canvas>
+
+        </div>
+        <!--<div class="col-lg-3">-->
+            <!--<h5 class="text-center">Win/Lose Pie</h5>-->
+            <!--<canvas id="winChart" width="200" height="200"></canvas>-->
+
+        <!--</div>-->
+    </div>
+    <div class="row">
+        <div class="col-lg-4">
+            <h5 class="text-center">Start Cost <small>Mean: <span id="startScoreMean"></span>, Std: <span id="startScoreStd"></span> </small></h5>
+            <h5 class="text-center">Real Cost: <strong>19</strong> <small>heuristic: 13</small></h5>
+
+            <canvas id="startScoreChart" width="200" height="200"></canvas>
+
+        </div>
+        <div class="col-lg-4">
+            <h5 class="text-center">Middle Cost <small>Mean: <span id="middleScoreMean"></span>, Std: <span id="middleScoreStd"></span> </small></h5>
+            <h5 class="text-center">Real Cost: <strong>11</strong> <small>heuristic: 9</small></h5>
+
+            <canvas id="middleScoreChart" width="200" height="200"></canvas>
+
+        </div>
+        <div class="col-lg-4">
+            <h5 class="text-center">End Cost <small>Mean: <span id="endScoreMean"></span>, Std: <span id="endScoreStd"></span> </small></h5>
+            <h5 class="text-center">Real Cost: <strong>6</strong> <small>heuristic: 6</small></h5>
+            <canvas id="endScoreChart" width="200" height="200"></canvas>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+<script>
+    function drawBarGrah(id,data,label,realCost){
+        console.log(data);
+        var ctx = document.getElementById(id+"Chart");
+        var labels=[];
+        var arr_data=[];
+
+        for (i in data){
+
+            labels.push(data[i].key);
+            arr_data.push(data[i].values.length);
+        }
+        var math_data=[];
+        for (i in data){
+
+            for (j in data[i].values){
+                math_data.push(data[i].key);
+            }
+        }
+
+        if (math_data.length>0){
+            $("#"+id+"Mean")[0].innerHTML=math.round(math.mean(math_data),3);
+            $("#"+id+"Std")[0].innerHTML=math.round(math.std(math_data),3);
+        }
+        else{
+            $("#"+id+"Mean")[0].innerHTML=0;
+            $("#"+id+"Std")[0].innerHTML=0;
+        }
+
+
+        var bar_data = {
+            labels: labels,
+            datasets: [
+                {
+                    label: "Number Of Votes",
+                    backgroundColor: "rgba(255,99,132,0.2)",
+                    borderColor: "rgba(255,99,132,1)",
+                    borderWidth: 1,
+                    hoverBackgroundColor: "rgba(255,99,132,0.4)",
+                    hoverBorderColor: "rgba(255,99,132,1)",
+                    data: arr_data,
+
+                }
+            ]
+        };
+
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: bar_data,
+            options: {
+                responsive: true,
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
+                }
+
+            }
+
+
+        });
+    }
+
+
+</script>
+<script>
+    var result ="";
+    function filterDuration(value){
+
+        rangePrimary.value=value;
+        result =  <%- JSON.stringify(results) %>;
+        var newResult=[];
+        for (res in result){
+            if (parseInt(result[res].endDuration) >=value && parseInt(result[res].startDuration) >=value && parseInt(result[res].middleDuration)>=value ){
+                if (parseInt(result[res].endScore) >=range.value && parseInt(result[res].startScore) >=range.value && parseInt(result[res].middleScore)>=range.value ) {
+
+                    newResult.push(result[res]);
+                }
+            }
+        }
+        draw(newResult)
+    }
+
+    function filterCost(value){
+        range.value=value;
+        result =  <%- JSON.stringify(results) %>;
+        var newResult=[];
+        for (res in result){
+            if (parseInt(result[res].endScore) >=value && parseInt(result[res].startScore) >=value && parseInt(result[res].middleScore)>=value ) {
+                if (parseInt(result[res].endDuration) >= rangePrimary.value && parseInt(result[res].startDuration) >= rangePrimary.value && parseInt(result[res].middleDuration) >= rangePrimary.value) {
+
+                    newResult.push(result[res]);
+                }
+            }
+        }
+
+        draw(newResult)
+    }
+    init();
+    function init () {
+
+
+        result =  <%- JSON.stringify(results) %>;
+        console.log(result);
+        draw(result);
+    }
+
+
+    function draw(result){
+        var gender_data = d3.nest() //Build a dataset for the pie chart
+                .key(function(d) {
+                    return d.gender;
+                })
+                .entries(result)
+        console.log(gender_data);
+        var ctx = document.getElementById("myChart");
+        var labels=[];
+        var data=[];
+        for (i in gender_data){
+            labels.push(gender_data[i].key);
+
+            data.push(gender_data[i].values.length);
+        }
+        var data = {
+            labels: labels,
+            datasets: [
+                {
+                    label: "Gender Pie",
+                    backgroundColor:  [
+                        "#FF6384",
+                        "#4BC0C0",
+                        "#FFCE56",
+                        "#E7E9ED",
+                        "#36A2EB"
+                    ],
+                    borderColor: "rgba(255,99,132,1)",
+                    borderWidth: 1,
+                    hoverBackgroundColor: "rgba(255,99,132,0.4)",
+                    hoverBorderColor: "rgba(255,99,132,1)",
+                    data: data,
+                }
+            ]
+        };
+
+        var myChart = new Chart(ctx, {
+            type: 'pie',
+            data: data,
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
+                }
+            }
+        });
+
+
+
+//        var win_data = d3.nest() //Build a dataset for the pie chart
+//                .key(function(d) {
+//                    if (d.Win==""){
+//                        return "false";
+//                    }
+//                    return d.Win;
+//                })
+//                .entries(result)
+//        console.log(win_data);
+//        var ctx = document.getElementById("winChart");
+//        var labels=[];
+//        var data=[];
+//
+//
+//        for (i in win_data){
+//            labels.push(win_data[i].key);
+//            data.push(win_data[i].values.length);
+//        }
+//
+//        var data = {
+//            labels: labels,
+//            datasets: [
+//                {
+//                    label: "Win Pie",
+//                    backgroundColor:  [
+//                        "#FF6384",
+//                        "#4BC0C0",
+//                        "#FFCE56",
+//                        "#E7E9ED",
+//                        "#36A2EB"
+//                    ],
+//                    borderColor: "rgba(255,99,132,1)",
+//                    borderWidth: 1,
+//                    hoverBackgroundColor: "rgba(255,99,132,0.4)",
+//                    hoverBorderColor: "rgba(255,99,132,1)",
+//                    data: data
+//                }
+//            ]
+//        };
+//
+//        var myChart = new Chart(ctx, {
+//            type: 'pie',
+//            data: data,
+//            options: {
+//                scales: {
+//                    yAxes: [{
+//                        ticks: {
+//                            beginAtZero:true
+//                        }
+//                    }]
+//                }
+//            }
+//        });
+
+        var start_data = d3.nest() //Build a dataset for the pie chart
+                .key(function(d) {
+                    return d.startCost;
+                })
+                .entries(result)
+        drawBarGrah("startScore",start_data,"Start",19)
+
+        var middle_data = d3.nest() //Build a dataset for the pie chart
+                .key(function(d) {
+                    return d.middleCost;
+                })
+                .entries(result)
+        drawBarGrah("middleScore",middle_data,"Middle",11)
+
+        var end_data = d3.nest() //Build a dataset for the pie chart
+                .key(function(d) {
+                    return d.endCost;
+                })
+                .entries(result)
+        drawBarGrah("endScore",end_data,"End",6)
+
+    }
+
+</script>
+
+<script>
+
+
+
+
+    function download(){
+       window.location="/csv"
+    }
+</script>
+
+</body>
+</html>

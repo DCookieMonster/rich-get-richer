@@ -1,0 +1,31 @@
+{
+  "name": "PlannerServer",
+  "version": "0.1.0",
+  "description": "Server for the Planner Experiment",
+  "engines": {
+    "node": "5.9.1"
+  },
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "body-parser": "*",
+    "ejs": "2.4.1",
+    "express": "4.13.3",
+    "json2csv": "^3.4.2",
+    "mongodb": "*",
+    "request": "2.65.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DCookieMonster/Planner_Nodejs.git"
+  },
+  "keywords": [
+    "node",
+    "planner",
+    "experiment",
+    "express"
+  ],
+  "license": "MIT"
+}

@@ -1,0 +1,27 @@
+{
+  "name": "Nodejs Planner server",
+  "homepage": "https://github.com/DCookieMonster/Planner_Nodejs",
+  "authors": [
+    "dor <amirdor@gmail.com>"
+  ],
+  "description": "a node.js planner server for logger data",
+  "main": "../index.js",
+  "keywords": [
+    "nodejs",
+    "server"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "Chart.js": "^2.1.2",
+    "d3": "^3.5.17",
+    "mathjs": "^3.2.1"
+  }
+}
