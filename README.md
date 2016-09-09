@@ -9,9 +9,9 @@ experiment should the rich get richer?
 ##run node server
 
 ```bash
-cd Nodejs_logger.
-npm install.
-node index.js.
+cd Nodejs_logger
+npm install
+node index.js
 ```
 
 ##install the client side
@@ -22,6 +22,6 @@ bower install
 ###config.
 In `js/controllers/pagesCtrl.js` change url to your server URL
 
-and you are read to start :)
+and you are ready to start :)
 
 
